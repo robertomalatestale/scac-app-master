@@ -8,54 +8,47 @@ import ListagemConsertos from './views/listagem-consertos';
 import ListagemFuncionarios from './views/listagem-funcionarios';
 import ListagemDispositivos from './views/listagem-dispositivos';
 import ListagemTipoProdutos from './views/listagem-tipoProdutos';
-import AcompanhamentoAtividadesComplementares from './views/acompanhamento-atividades-complementares';
 
 import Login from './views/login';
-import CadastroUsuario from './views/cadastro-usuario';
-import CadastroCurso from './views/cadastro-curso';
-import CadastroProfessor from './views/cadastro-professor';
-import CadastroModelos  from './views/cadastro-modelos';
-import CadastroCategoria from './views/cadastro-categoria';
-import CadastroAtividadeComplementar from './views/cadastro-atividade-complementar';
+import CadastroDispositivos from './views/cadastro-dispositivos';
+
+import CadastroClientes from './views/cadastro-clientes';
+import CadastroMarcas from './views/cadastro-marcas';
+import CadastroFuncionarios from './views/cadastro-funcionarios';
+import CadastroTipoProdutos from './views/cadastro-tipoProdutos';
+import CadastroModelos from './views/cadastro-modelos';
+import CadastroConsertos from './views/cadastro-consertos';
+import CadastroProdutos from './views/cadastro-produtos';
 
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
+
 
 function Rotas(props) {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/login' element={<Login />} />
-        <Route
-          path='/cadastro-usuarios/:idParam?'
-          element={<CadastroUsuario />}
-        />
-        <Route path='/cadastro-cursos/:idParam?' element={<CadastroCurso />} />
-        <Route
-          path='/cadastro-professores/:idParam?'
-          element={<CadastroProfessor />}
+        <Route path='/login' element={<Login />}
         />
         <Route path='/cadastro-modelos/:idParam?' element={<CadastroModelos />} />
-        <Route
-          path='/cadastro-categorias/:idParam?'
-          element={<CadastroCategoria />}
-        />
-        <Route
-          path='/cadastro-atividades-complementares/:idParam?'
-          element={<CadastroAtividadeComplementar />}
-        />
+        <Route path='/cadastro-clientes/:idParam?' element={<CadastroClientes />} />
+        <Route path='/cadastro-marcas/:idParam?' element={<CadastroMarcas />} />
+        <Route path='/cadastro-dispositivos/:idParam?' element={<CadastroDispositivos />} />
+        <Route path='/cadastro-produtos/:idParam?' element={<CadastroProdutos />} />
+        <Route path='/cadastro-tipoProdutos/:idParam?' element={<CadastroTipoProdutos />} />
+        <Route path='/cadastro-funcionarios/:idParam?' element={<CadastroFuncionarios />} />
+        <Route path='/cadastro-consertos/:idParam?' element={<CadastroConsertos />} />
+        
         <Route path='/listagem-Modelos' element={<ListagemModelos />} />
         <Route path='/listagem-clientes' element={<ListagemClientes />} />
-        <Route path='/listagem-produtos' element={<ListagemProdutos />} />
         <Route path='/listagem-marcas' element={<ListagemMarcas />} />
         <Route path='/listagem-dispositivos' element={<ListagemDispositivos />} />
-        <Route path='/listagem-consertos' element={<ListagemConsertos />} />
+        <Route path='/listagem-produtos' element={<ListagemProdutos />} />
         <Route path='/listagem-tipoProdutos' element={<ListagemTipoProdutos />} />
         <Route path='/listagem-funcionarios' element={<ListagemFuncionarios />} />
-        
-        <Route
-          path='/acompanhamento-atividades-complementares'
-          element={<AcompanhamentoAtividadesComplementares />}
-        />
+        <Route path='/listagem-consertos' element={<ListagemConsertos />} />
+
+
+
       </Routes>
     </BrowserRouter>
   );
