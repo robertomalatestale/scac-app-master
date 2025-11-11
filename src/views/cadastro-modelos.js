@@ -12,6 +12,7 @@ import '../custom.css';
 
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
+import { BASE_URL2 } from '../config/axios';
 
 function CadastroAluno() {
   const { idParam } = useParams();
@@ -76,8 +77,14 @@ function CadastroAluno() {
     setIdMarca(dados.idMarca);
     setNomeModelo(dados.nomeModelo);
   }
-
+  const [dadosMarcas, setDadosMarcas] = React.useState(null);
   const [dadosModelos, setDadosModelos] = React.useState(null);
+
+  useEffect(() => {
+      axios.get(`${BASE_URL2}/marcas`).then((response) => {
+        setDadosMarcas(response.data);
+      });
+    }, []);
 
   useEffect(() => {
     axios.get(`${BASE_URL}/modelos`).then((response) => {
@@ -91,6 +98,7 @@ function CadastroAluno() {
 
   if (!dados) return null;
   if (!dadosModelos) return null;
+  if (!dadosMarcas) return null;
 
   return (
     <div className='container'>
@@ -98,15 +106,26 @@ function CadastroAluno() {
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
-              <FormGroup label='idMarca: *' htmlFor='inputIdMarca'>
-                <input
-                  type='text'
-                  id='inputIdMarca'
-                  value={idMarca}
-                  className='form-control'
-                  name='idMarca'
-                  onChange={(e) => setIdMarca(e.target.value)}
-                />
+              
+            
+              <FormGroup label='Marca: *' htmlFor='selectMarca'>
+                <select
+                  class='form-select'
+                  id='selectMarca'
+                  value={idMarca}                  
+                  name='idMarca'                  
+                  onChange={(e) => setIdMarca(e.target.value)}                            
+                >
+                  <option key='0' value='0'>
+                    {' '}
+                  </option>
+                  {dadosMarcas.map((dado) => (
+                    <option key={dado.id} value={dado.id}>
+                      {dado.nome}
+                    </option>
+                  ))}
+
+                </select>
               </FormGroup>
               <FormGroup label='NomeModelo: *' htmlFor='inputNomeModelo'>
                 <input

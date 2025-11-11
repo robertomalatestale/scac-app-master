@@ -12,6 +12,7 @@ import '../custom.css';
 
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
+import { BASE_URL2 } from '../config/axios';
 
 function CadastroDispositivos() {
   const { idParam } = useParams();
@@ -21,7 +22,7 @@ function CadastroDispositivos() {
   const baseURL = `${BASE_URL}/dispositivos`;
 
   const [id, setId] = useState('');
-  const [idMarca, setIdMarca] = useState('');
+  const [idMarca, setIdMarca] = useState(0);
   const [idModelo, setIdModelo] = useState('');
   const [ano, setAno] = useState('');
 
@@ -31,7 +32,7 @@ function CadastroDispositivos() {
   function inicializar() {
     if (idParam == null) {
       setId('');
-      setIdMarca('');
+      setIdMarca(0);
       setIdModelo('');
       setAno('');
     } else {
@@ -73,6 +74,8 @@ function CadastroDispositivos() {
     }
   }
 
+    const [dadosMarcas, setDadosMarcas] = React.useState(null);
+  
   async function buscar() {
     await axios.get(`${baseURL}/${idParam}`).then((response) => {
       setDados(response.data);
@@ -87,7 +90,15 @@ function CadastroDispositivos() {
     buscar(); // eslint-disable-next-line
   }, [id]);
 
+    useEffect(() => {
+        axios.get(`${BASE_URL2}/marcas`).then((response) => {
+          setDadosMarcas(response.data);
+        });
+      }, []);
+
   if (!dados) return null;
+  if (!dadosMarcas) return null;
+
 
   return (
     <div className='container'>
@@ -95,15 +106,23 @@ function CadastroDispositivos() {
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
-              <FormGroup label='id Marca:' htmlFor='inputIdMarca'>
-                <input
-                  type='int'
-                  id='inputIdMarca'
-                  value={idMarca}
-                  className='form-control'
-                  name='idMarca'
-                  onChange={(e) => setIdMarca(e.target.value)}
-                />
+              <FormGroup label='Marca: *' htmlFor='selectMarca'>
+                <select
+                  class='form-select'
+                  id='selectMarca'
+                  value={idMarca}                  
+                  name='idMarca'                  
+                  onChange={(e) => setIdMarca(e.target.value)}                            
+                >
+                  <option key='0' value='0'>
+                    {' '}
+                  </option>
+                  {dadosMarcas.map((dado) => (
+                    <option key={dado.id} value={dado.id}>
+                      {dado.nome}
+                    </option>
+                  ))}
+                </select>
               </FormGroup>
               <FormGroup label='id Modelo' htmlFor='inputIdModelo'>
                 <input
