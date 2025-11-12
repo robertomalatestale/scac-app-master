@@ -83,6 +83,8 @@ function CadastroConsertos() {
     const [dadosClientes, setDadosClientes] = React.useState(null);
     const [dadosDispositivos, setDadosDispositivos] = React.useState(null);
     const [dadosFuncionarios, setDadosFuncionarios] = React.useState(null);
+    const [dadosMarcas, setDadosMarcas] = React.useState(null);
+    const [dadosModelos, setDadosModelos] = React.useState(null);
 
 
   async function buscar() {
@@ -119,10 +121,24 @@ function CadastroConsertos() {
     });
   }, []);
 
+  useEffect(() => {
+    axios.get(`${BASE_URL2}/marcas`).then((response) => {
+      setDadosMarcas(response.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    axios.get(`${BASE_URL}/modelos`).then((response) => {
+      setDadosModelos(response.data);
+    });
+  }, []);
+
   if (!dados) return null;
   if (!dadosClientes) return null;
   if (!dadosDispositivos) return null;
   if (!dadosFuncionarios) return null;
+  if (!dadosMarcas) return null;
+  if (!dadosModelos) return null;
 
   return (
     <div className='container'>
@@ -136,7 +152,7 @@ function CadastroConsertos() {
                   id='selectCliente'
                   value={idCliente}
                   name='idCliente'
-                  onChange={(e) => setIdCliente(e.target.value)}
+                  onChange={(e) => setIdCliente(Number(e.target.value))}
                 >
                   <option key='0' value='0'>
                     {' '}
@@ -148,7 +164,7 @@ function CadastroConsertos() {
                   ))}
                 </select>
               </FormGroup>
-              <FormGroup label='Dispositivo:' htmlFor='selectDispositivo'>
+              <FormGroup label='Dispositivo: *' htmlFor='selectDispositivo'>
                   <select
                   class='form-select'
                   id='selectDispositivo'
@@ -159,11 +175,32 @@ function CadastroConsertos() {
                   <option key='0' value='0'>
                     {' '}
                   </option>
-                  {dadosDispositivos.map((dado) => (
-                    <option key={dado.id} value={dado.id}>
-                      {dado.id}
-                    </option>
-                  ))}
+                 {idCliente !== 0 &&
+                  (() => {
+                    const clienteSelecionado = dadosClientes.find(c => c.id === idCliente);
+
+                    const idsDispositivosDoCliente = clienteSelecionado
+                      ? Object.values(clienteSelecionado.dispositivos[0])
+                      : [];
+
+                    const dispositivosFiltrados = dadosDispositivos.filter(d =>
+                      idsDispositivosDoCliente.includes(d.id)
+                    );
+
+                    return dispositivosFiltrados.map((disp) => {
+                      const modelo = dadosModelos.find(m => m.id === disp.idModelo);
+                      const marca = dadosMarcas.find(m => m.id === disp.idMarca);
+
+                      const dispositivoFormatado = `[${marca?.nome}] ${modelo?.nomeModelo} - ${disp.ano}`;
+
+                      return (
+                        <option key={disp.id} value={disp.id}>
+                          {dispositivoFormatado}
+                        </option>
+                      );
+                    });
+                  })()
+                }
                 </select>
               </FormGroup>
               <FormGroup label='Funcionario: *' htmlFor='selectFuncionario'>
