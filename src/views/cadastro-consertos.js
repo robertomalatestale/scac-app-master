@@ -11,7 +11,6 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 import '../custom.css';
 
 import axios from 'axios';
-
 import { BASE_URL } from '../config/axios';
 import { BASE_URL2 } from '../config/axios';
 
@@ -20,8 +19,7 @@ function CadastroConsertos() {
 
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL}/consertos`;
-  const baseURL2 = `${BASE_URL2}/consertos`;
+  const baseURL = `${BASE_URL2}/consertos`;
 
   const [id, setId] = useState('');
   const [idCliente, setIdCliente] = useState('');
@@ -35,7 +33,6 @@ function CadastroConsertos() {
 
   function inicializar() {
     if (idParam == null) {
-      setId('');
       setIdCliente();
       setIdDispositivo();
       setIdFuncionario();
@@ -44,7 +41,6 @@ function CadastroConsertos() {
       setDataEsperada();
 
     } else {
-      setId(dados.id);
       setIdCliente(dados.idCliente);
       setIdDispositivo(dados.idDispositivo);
       setIdFuncionario(dados.idFuncionario);
@@ -55,23 +51,23 @@ function CadastroConsertos() {
   }
 
   async function salvar() {
-    let data = { id, idCliente, idDispositivo, idFuncionario, observacoes, valor, dataEsperada };
+    let data = { id, idDispositivo, idFuncionario, observacoes, valor, dataEsperada };
     data = JSON.stringify(data);
     if (idParam == null) {
       await axios
-        .post(baseURL2, data, {
+        .post(baseURL, data, {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
           mensagemSucesso(`Conserto ${id} cadastrado com sucesso!`);
-          navigate(`/listagem-consertos`);
+          navigate(`/listagem-conserto`);
         })
         .catch(function (error) {
           mensagemErro(error.response.data);
         });
     } else {
       await axios
-        .put(`${baseURL2}/${idParam}`, data, {
+        .put(`${baseURL}/${idParam}`, data, {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
@@ -84,44 +80,44 @@ function CadastroConsertos() {
     }
   }
 
+    const [dadosClientes, setDadosClientes] = React.useState(null);
+    const [dadosDispositivos, setDadosDispositivos] = React.useState(null);
+    const [dadosFuncionarios, setDadosFuncionarios] = React.useState(null);
+
+
   async function buscar() {
-    await axios.get(`${2}/${idParam}`).then((response) => {
+    await axios.get(`${baseURL}/${idParam}`).then((response) => {
       setDados(response.data);
     });
-      setId(dados.id);
-    setIdCliente(dados.idCliente);
+      setIdCliente(dados.idCliente);
       setIdDispositivo(dados.idDispositivo);
       setIdFuncionario(dados.idFuncionario);
       setObservacoes(dados.observacoes);
       setValor(dados.valor);
       setDataEsperada(dados.dataEsperada);
   }
- 
-  const [dadosClientes, setDadosClientes] = React.useState(null);
-  const [dadosDispositivos, setDadosDispositivos] = React.useState(null);
-  const [dadosFuncionarios, setDadosFuncionarios] = React.useState(null);
-  
+
   useEffect(() => {
     buscar(); // eslint-disable-next-line
   }, [id]);
 
     useEffect(() => {
-      axios.get(`${BASE_URL}/clientes`).then((response) => {
-        setDadosClientes(response.data);
-      });
-    }, []);
-    
-    useEffect(() => {
-      axios.get(`${BASE_URL}/dispositivos`).then((response) => {
-        setDadosDispositivos(response.data);
-      });
-    }, []);
-    useEffect(() => {
-      axios.get(`${BASE_URL}/funcionarios`).then((response) => {
-        setDadosFuncionarios(response.data);
-      });
-    }, []);
+    axios.get(`${BASE_URL}/clientes`).then((response) => {
+      setDadosClientes(response.data);
+    });
+  }, []);
 
+  useEffect(() => {
+    axios.get(`${BASE_URL}/dispositivos`).then((response) => {
+      setDadosDispositivos(response.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    axios.get(`${BASE_URL}/funcionarios`).then((response) => {
+      setDadosFuncionarios(response.data);
+    });
+  }, []);
 
   if (!dados) return null;
   if (!dadosClientes) return null;
@@ -138,9 +134,9 @@ function CadastroConsertos() {
                 <select
                   class='form-select'
                   id='selectCliente'
-                  value={idCliente}                  
-                  name='idCliente'                  
-                  onChange={(e) => setIdCliente(e.target.value)}                            
+                  value={idCliente}
+                  name='idCliente'
+                  onChange={(e) => setIdCliente(e.target.value)}
                 >
                   <option key='0' value='0'>
                     {' '}
@@ -150,16 +146,15 @@ function CadastroConsertos() {
                       {dado.nomeCompleto}
                     </option>
                   ))}
-
                 </select>
-              </FormGroup>     
-              <FormGroup label='Dispositivo: *' htmlFor='selectDispositivo'>
-                <select
+              </FormGroup>
+              <FormGroup label='Dispositivo:' htmlFor='selectDispositivo'>
+                  <select
                   class='form-select'
                   id='selectDispositivo'
-                  value={idDispositivo}                  
-                  name='idDispositivo'                  
-                  onChange={(e) => setIdDispositivo(e.target.value)}                            
+                  value={idDispositivo}
+                  name='idDispositivo'
+                  onChange={(e) => setIdDispositivo(e.target.value)}
                 >
                   <option key='0' value='0'>
                     {' '}
@@ -169,16 +164,15 @@ function CadastroConsertos() {
                       {dado.id}
                     </option>
                   ))}
-
                 </select>
-              </FormGroup>        
+              </FormGroup>
               <FormGroup label='Funcionario: *' htmlFor='selectFuncionario'>
-                <select
+                  <select
                   class='form-select'
                   id='selectFuncionario'
-                  value={idFuncionario}                  
-                  name='idFuncionario'                  
-                  onChange={(e) => setIdDispositivo(e.target.value)}                            
+                  value={idFuncionario}
+                  name='idFuncionario'
+                  onChange={(e) => setIdFuncionario(e.target.value)}
                 >
                   <option key='0' value='0'>
                     {' '}
@@ -188,9 +182,8 @@ function CadastroConsertos() {
                       {dado.nomeCompleto}
                     </option>
                   ))}
-
                 </select>
-              </FormGroup>  
+              </FormGroup>
               <FormGroup label='Observacoes:' htmlFor='inputObservacoes'>
                 <input
                   type='text'
@@ -213,7 +206,7 @@ function CadastroConsertos() {
               </FormGroup>
               <FormGroup label='Data Esperada:' htmlFor='inputDataEsperada'>
                 <input
-                  type='date'
+                  type='int'
                   id='inputDataEsperada'
                   value={dataEsperada}
                   className='form-control'
