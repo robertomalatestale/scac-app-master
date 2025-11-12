@@ -25,6 +25,9 @@ function CadastroAluno() {
   const [idMarca, setIdMarca] = useState(0);
   const [nomeModelo, setNomeModelo] = useState('');
 
+  
+  
+  
   const [dados, setDados] = React.useState([]);
 
   function inicializar() {
@@ -77,9 +80,10 @@ function CadastroAluno() {
     setIdMarca(dados.idMarca);
     setNomeModelo(dados.nomeModelo);
   }
-  const [dadosMarcas, setDadosMarcas] = React.useState(null);
-  const [dadosModelos, setDadosModelos] = React.useState(null);
 
+  const [dadosModelos, setDadosModelos] = React.useState(null);
+  const [dadosMarcas, setDadosMarcas] = React.useState(null);
+  
   useEffect(() => {
       axios.get(`${BASE_URL2}/marcas`).then((response) => {
         setDadosMarcas(response.data);

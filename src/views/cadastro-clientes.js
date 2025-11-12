@@ -11,6 +11,7 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 import '../custom.css';
 
 import axios from 'axios';
+
 import { BASE_URL } from '../config/axios';
 
 function CadastroClientes() {
@@ -26,7 +27,6 @@ function CadastroClientes() {
   const [telefoneCelular, setTelefoneCelular] = useState('');
   const [email, setEmail] = useState('');
   
-
   const [dados, setDados] = useState([]);
 
   function inicializar() {
@@ -47,7 +47,7 @@ function CadastroClientes() {
   }
 
   async function salvar() {
-    let data = { id, nomeCompleto, cpf,telefoneCelular,email};
+    let data = { id, nomeCompleto, cpf, telefoneCelular, email};
     data = JSON.stringify(data);
     if (idParam == null) {
       await axios

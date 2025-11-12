@@ -56,7 +56,7 @@ function CadastroProdutos() {
   }
 
   async function salvar() {
-    let data = { id, nome };
+    let data = { id, nome, preco, idMarca, idTipoProduto, cor, quantidade };
     data = JSON.stringify(data);
     if (idParam == null) {
       await axios
@@ -99,6 +99,8 @@ function CadastroProdutos() {
   }
 
   const [dadosProdutos, setDadosProdutos] = React.useState(null);
+  const [dadosMarcas, setDadosMarcas] = React.useState(null);
+  const [dadosTipoProdutos, setDadosTipoProdutos] = React.useState(null);
 
 
   useEffect(() => {
@@ -108,11 +110,25 @@ function CadastroProdutos() {
   }, []);
 
   useEffect(() => {
+      axios.get(`${BASE_URL2}/marcas`).then((response) => {
+        setDadosMarcas(response.data);
+      });
+    }, []);
+
+  useEffect(() => {
+      axios.get(`${BASE_URL2}/tipoProdutos`).then((response) => {
+        setDadosTipoProdutos(response.data);
+      });
+    }, []);
+
+  useEffect(() => {
     buscar(); // eslint-disable-next-line
   }, [id]);
 
   if (!dados) return null;
   if (!dadosProdutos) return null;
+   if (!dadosMarcas) return null;
+   if (!dadosTipoProdutos) return null;
 
   return (
     <div className='container'>
@@ -141,26 +157,45 @@ function CadastroProdutos() {
                   onChange={(e) => setPreco(e.target.value)}
                 />
               </FormGroup>
-              <FormGroup label='id Marca:' htmlFor='inputIdMarca'>
-                <input
-                  type='int'
-                  id='inputIdMarca'
-                  value={idMarca}
-                  className='form-control'
-                  name='idMarca'
-                  onChange={(e) => setIdMarca(e.target.value)}
-                />
+              <FormGroup label='Marca: *' htmlFor='selectMarca'>
+                <select
+                  class='form-select'
+                  id='selectMarca'
+                  value={idMarca}                  
+                  name='idMarca'                  
+                  onChange={(e) => setIdMarca(e.target.value)}                            
+                >
+                  <option key='0' value='0'>
+                    {' '}
+                  </option>
+                  {dadosMarcas.map((dado) => (
+                    <option key={dado.id} value={dado.id}>
+                      {dado.nome}
+                    </option>
+                  ))}
+
+                </select>
               </FormGroup>
-              <FormGroup label='id Tipo do Produto:' htmlFor='inputIdTipoProduto'>
-                <input
-                  type='int'
-                  id='inputIdTipoProduto'
-                  value={idTipoProduto}
-                  className='form-control'
-                  name='idTipoProduto'
-                  onChange={(e) => setIdTipoProduto(e.target.value)}
-                />
+              <FormGroup label='Tipo de Produtos: *' htmlFor='selectTipoProduto'>
+                <select
+                  class='form-select'
+                  id='selectTipoProduto'
+                  value={idTipoProduto}                  
+                  name='idTipoProduto'                  
+                  onChange={(e) => setIdTipoProduto(e.target.value)}                            
+                >
+                  <option key='0' value='0'>
+                    {' '}
+                  </option>
+                  {dadosTipoProdutos.map((dado) => (
+                    <option key={dado.id} value={dado.id}>
+                      {dado.nome}
+                    </option>
+                  ))}
+
+                </select>
               </FormGroup>
+              
               <FormGroup label='Cor:' htmlFor='inputCor'>
                 <input
                   type='text'

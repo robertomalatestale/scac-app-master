@@ -11,6 +11,8 @@ import { mensagemSucesso, mensagemErro } from '../components/toastr';
 import '../custom.css';
 
 import axios from 'axios';
+
+import { BASE_URL } from '../config/axios';
 import { BASE_URL2 } from '../config/axios';
 
 function CadastroConsertos() {
@@ -18,7 +20,8 @@ function CadastroConsertos() {
 
   const navigate = useNavigate();
 
-  const baseURL = `${BASE_URL2}/consertos`;
+  const baseURL = `${BASE_URL}/consertos`;
+  const baseURL2 = `${BASE_URL2}/consertos`;
 
   const [id, setId] = useState('');
   const [idCliente, setIdCliente] = useState('');
@@ -32,6 +35,7 @@ function CadastroConsertos() {
 
   function inicializar() {
     if (idParam == null) {
+      setId('');
       setIdCliente();
       setIdDispositivo();
       setIdFuncionario();
@@ -40,6 +44,7 @@ function CadastroConsertos() {
       setDataEsperada();
 
     } else {
+      setId(dados.id);
       setIdCliente(dados.idCliente);
       setIdDispositivo(dados.idDispositivo);
       setIdFuncionario(dados.idFuncionario);
@@ -50,28 +55,28 @@ function CadastroConsertos() {
   }
 
   async function salvar() {
-    let data = { id, idDispositivo, idFuncionario, observacoes, valor, dataEsperada };
+    let data = { id, idCliente, idDispositivo, idFuncionario, observacoes, valor, dataEsperada };
     data = JSON.stringify(data);
     if (idParam == null) {
       await axios
-        .post(baseURL, data, {
+        .post(baseURL2, data, {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
           mensagemSucesso(`Conserto ${id} cadastrado com sucesso!`);
-          navigate(`/listagem-conserto`);
+          navigate(`/listagem-consertos`);
         })
         .catch(function (error) {
           mensagemErro(error.response.data);
         });
     } else {
       await axios
-        .put(`${baseURL}/${idParam}`, data, {
+        .put(`${baseURL2}/${idParam}`, data, {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
           mensagemSucesso(`Conserto ${id} alterado com sucesso!`);
-          navigate(`/listagem-conserto`);
+          navigate(`/listagem-consertos`);
         })
         .catch(function (error) {
           mensagemErro(error.response.data);
@@ -80,9 +85,10 @@ function CadastroConsertos() {
   }
 
   async function buscar() {
-    await axios.get(`${baseURL}/${idParam}`).then((response) => {
+    await axios.get(`${2}/${idParam}`).then((response) => {
       setDados(response.data);
     });
+      setId(dados.id);
     setIdCliente(dados.idCliente);
       setIdDispositivo(dados.idDispositivo);
       setIdFuncionario(dados.idFuncionario);
@@ -90,12 +96,37 @@ function CadastroConsertos() {
       setValor(dados.valor);
       setDataEsperada(dados.dataEsperada);
   }
-
+ 
+  const [dadosClientes, setDadosClientes] = React.useState(null);
+  const [dadosDispositivos, setDadosDispositivos] = React.useState(null);
+  const [dadosFuncionarios, setDadosFuncionarios] = React.useState(null);
+  
   useEffect(() => {
     buscar(); // eslint-disable-next-line
   }, [id]);
 
+    useEffect(() => {
+      axios.get(`${BASE_URL}/clientes`).then((response) => {
+        setDadosClientes(response.data);
+      });
+    }, []);
+    
+    useEffect(() => {
+      axios.get(`${BASE_URL}/dispositivos`).then((response) => {
+        setDadosDispositivos(response.data);
+      });
+    }, []);
+    useEffect(() => {
+      axios.get(`${BASE_URL}/funcionarios`).then((response) => {
+        setDadosFuncionarios(response.data);
+      });
+    }, []);
+
+
   if (!dados) return null;
+  if (!dadosClientes) return null;
+  if (!dadosDispositivos) return null;
+  if (!dadosFuncionarios) return null;
 
   return (
     <div className='container'>
@@ -103,36 +134,63 @@ function CadastroConsertos() {
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
-              <FormGroup label='id Cliente:' htmlFor='inputIdCliente'>
-                <input
-                  type='int'
-                  id='inputIdCliente'
-                  value={idCliente}
-                  className='form-control'
-                  name='idCliente'
-                  onChange={(e) => setIdCliente(e.target.value)}
-                />
-              </FormGroup>
-              <FormGroup label='id Dispositivo:' htmlFor='inputIdDispositivo'>
-                <input
-                  type='int'
-                  id='inputIdDispositivo'
-                  value={idDispositivo}
-                  className='form-control'
-                  name='idDispositivo'
-                  onChange={(e) => setIdDispositivo(e.target.value)}
-                />
-              </FormGroup>
-              <FormGroup label='id Funcionario:' htmlFor='inputIdFuncionario'>
-                <input
-                  type='int'
-                  id='inputIdFuncionario'
-                  value={idFuncionario}
-                  className='form-control'
-                  name='idFuncionario'
-                  onChange={(e) => setIdFuncionario(e.target.value)}
-                />
-              </FormGroup>
+              <FormGroup label='Cliente: *' htmlFor='selectCliente'>
+                <select
+                  class='form-select'
+                  id='selectCliente'
+                  value={idCliente}                  
+                  name='idCliente'                  
+                  onChange={(e) => setIdCliente(e.target.value)}                            
+                >
+                  <option key='0' value='0'>
+                    {' '}
+                  </option>
+                  {dadosClientes.map((dado) => (
+                    <option key={dado.id} value={dado.id}>
+                      {dado.nomeCompleto}
+                    </option>
+                  ))}
+
+                </select>
+              </FormGroup>     
+              <FormGroup label='Dispositivo: *' htmlFor='selectDispositivo'>
+                <select
+                  class='form-select'
+                  id='selectDispositivo'
+                  value={idDispositivo}                  
+                  name='idDispositivo'                  
+                  onChange={(e) => setIdDispositivo(e.target.value)}                            
+                >
+                  <option key='0' value='0'>
+                    {' '}
+                  </option>
+                  {dadosDispositivos.map((dado) => (
+                    <option key={dado.id} value={dado.id}>
+                      {dado.id}
+                    </option>
+                  ))}
+
+                </select>
+              </FormGroup>        
+              <FormGroup label='Funcionario: *' htmlFor='selectFuncionario'>
+                <select
+                  class='form-select'
+                  id='selectFuncionario'
+                  value={idFuncionario}                  
+                  name='idFuncionario'                  
+                  onChange={(e) => setIdDispositivo(e.target.value)}                            
+                >
+                  <option key='0' value='0'>
+                    {' '}
+                  </option>
+                  {dadosFuncionarios.map((dado) => (
+                    <option key={dado.id} value={dado.id}>
+                      {dado.nomeCompleto}
+                    </option>
+                  ))}
+
+                </select>
+              </FormGroup>  
               <FormGroup label='Observacoes:' htmlFor='inputObservacoes'>
                 <input
                   type='text'
@@ -155,7 +213,7 @@ function CadastroConsertos() {
               </FormGroup>
               <FormGroup label='Data Esperada:' htmlFor='inputDataEsperada'>
                 <input
-                  type='int'
+                  type='date'
                   id='inputDataEsperada'
                   value={dataEsperada}
                   className='form-control'
