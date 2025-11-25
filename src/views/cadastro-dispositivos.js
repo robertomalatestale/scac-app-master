@@ -131,22 +131,21 @@ function CadastroDispositivos() {
                   ))}
                 </select>
               </FormGroup>
-              <FormGroup label='Modelo: *' htmlFor='selectModelo'>
+                <FormGroup label='Modelo: *' htmlFor='selectModelo'>
                 <select
-                  class='form-select'
+                  className='form-select'
                   id='selectModelo'
                   value={idModelo}
-                  name='idModelo'
                   onChange={(e) => setIdModelo(e.target.value)}
                 >
-                  <option key='0' value='0'>
-                    {' '}
-                  </option>
-                  {dadosModelos.map((dado) => (
-                    <option key={dado.id} value={dado.id}>
-                      {dado.nomeModelo}
-                    </option>
-                  ))}
+                  <option value=''></option>
+                  {dadosModelos
+                    .filter((m) => m.idMarca == idMarca)
+                    .map((dado) => (
+                      <option key={dado.id} value={dado.id}>
+                        {dado.nomeModelo}
+                      </option>
+                    ))}
                 </select>
               </FormGroup>
               <FormGroup label='Ano' htmlFor='inputAno'>
