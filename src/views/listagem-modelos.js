@@ -59,7 +59,6 @@ function ListagemModelos() {
   }, []);
 
   if (!dados) return null;
-
   return (
     <div className='container'>
       <Card title='Listagem de Modelos'>
@@ -82,7 +81,7 @@ function ListagemModelos() {
                   </tr>
                 </thead>
                 <tbody>
-                  {dados.map((dado) => (
+                  {dados.map((dado) => ( 
                     <tr key={dado.id}>
                       <td>{dado.nomeModelo}</td>
                       <td>{dado.idMarca}</td>
