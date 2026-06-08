@@ -21,7 +21,7 @@ function CadastroTipoProdutos() {
   const baseURL = `${BASE_URL2}/tipoProdutos`;
 
   const [id, setId] = useState('');
-  const [nome, setNome] = useState('');
+  const [nomeTipo, setNomeTipo] = useState('');
   
 
   const [dados, setDados] = React.useState([]);
@@ -29,16 +29,16 @@ function CadastroTipoProdutos() {
   function inicializar() {
     if (idParam == null) {
       setId('');
-      setNome('');
+      setNomeTipo('');
       
     } else {
       setId(dados.id);
-      setNome(dados.nome);
+      setNomeTipo(dados.nomeTipo);
     }
   }
 
   async function salvar() {
-    let data = { id, nome};
+    let data = { id, nomeTipo };
     data = JSON.stringify(data);
     if (idParam == null) {
       await axios
@@ -46,7 +46,7 @@ function CadastroTipoProdutos() {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
-          mensagemSucesso(`Tipo de Produto ${nome} cadastrado com sucesso!`);
+          mensagemSucesso(`Tipo de Produto ${nomeTipo} cadastrado com sucesso!`);
           navigate(`/listagem-tipoProdutos`);
         })
         .catch(function (error) {
@@ -58,7 +58,7 @@ function CadastroTipoProdutos() {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
-          mensagemSucesso(`Tipo de Produto ${nome} alterado com sucesso!`);
+          mensagemSucesso(`Tipo de Produto ${nomeTipo} alterado com sucesso!`);
           navigate(`/listagem-tipoProdutos`);
         })
         .catch(function (error) {
@@ -72,7 +72,7 @@ function CadastroTipoProdutos() {
       setDados(response.data);
     });
     setId(dados.id);
-    setNome(dados.nome);
+    setNomeTipo(dados.nomeTipo);
   }
 
   const [dadosTipoProdutos, setDadosTipoProdutos] = React.useState(null);
@@ -102,10 +102,10 @@ function CadastroTipoProdutos() {
                 <input
                   type='text'
                   id='inputNome'
-                  value={nome}
+                  value={nomeTipo}
                   className='form-control'
-                  name='nome'
-                  onChange={(e) => setNome(e.target.value)}
+                  name='nomeTipo'
+                  onChange={(e) => setNomeTipo(e.target.value)}
                 />
               </FormGroup>
               <Stack spacing={1} padding={1} direction='row'>

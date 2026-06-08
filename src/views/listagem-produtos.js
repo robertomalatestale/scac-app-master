@@ -91,7 +91,7 @@ function ListagemProdutos() {
                     <tr key={dado.id}>
                       <td>{dado.nome}</td>
                       <td>{dado.preco}</td>
-                      <td>{dado.idMarca}</td>
+                      <td>{dado.marca?.nomeMarca || dado.idMarca}</td>
                       <td>{dado.idTipoProduto}</td>
                       <td>{dado.cor}</td>
                       <td>{dado.quantidade}</td>

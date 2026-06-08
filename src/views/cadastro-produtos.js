@@ -170,7 +170,7 @@ function CadastroProdutos() {
                   </option>
                   {dadosMarcas.map((dado) => (
                     <option key={dado.id} value={dado.id}>
-                      {dado.nome}
+                      {dado.nomeMarca}
                     </option>
                   ))}
 
@@ -189,7 +189,7 @@ function CadastroProdutos() {
                   </option>
                   {dadosTipoProdutos.map((dado) => (
                     <option key={dado.id} value={dado.id}>
-                      {dado.nome}
+                      {dado.nomeTipo}
                     </option>
                   ))}
 

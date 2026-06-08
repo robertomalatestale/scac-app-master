@@ -1,0 +1,85 @@
+package br.edu.ifsudeste.demo.api.controller;
+
+
+import br.edu.ifsudeste.demo.api.dto.ClienteDTO;
+import br.edu.ifsudeste.demo.exception.RegraNegocioException;
+import br.edu.ifsudeste.demo.model.entity.Cliente;
+import br.edu.ifsudeste.demo.model.entity.Conserto;
+import br.edu.ifsudeste.demo.model.service.ClienteService;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/api/v1/clientes")
+@RequiredArgsConstructor
+public class ClienteController {
+    private final ClienteService clienteService;
+
+    @GetMapping()
+    public ResponseEntity get() {
+        List<Cliente> clientes = clienteService.getCliente();
+        return ResponseEntity.ok(clientes.stream().map(ClienteDTO::create).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity get(@PathVariable("id") Long id) {
+        Optional<Cliente> cliente = clienteService.getClienteById(id);
+        if (!cliente.isPresent()) {
+            return new ResponseEntity("Cliente não encontrado", HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(cliente.map(ClienteDTO::create));
+    }
+
+    @PostMapping()
+    public ResponseEntity post(@RequestBody ClienteDTO dto) {
+        try {
+            Cliente cliente = converter(dto);
+            cliente = clienteService.salvar(cliente);
+            return new ResponseEntity(cliente, HttpStatus.CREATED);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    public Cliente converter(ClienteDTO dto) {
+        ModelMapper modelMapper = new ModelMapper();
+        Cliente cliente = modelMapper.map(dto, Cliente.class);
+        return  cliente;
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody ClienteDTO dto) {
+        if (!clienteService.getClienteById(id).isPresent()) {
+            return new ResponseEntity("Cliente não encontrada", HttpStatus.NOT_FOUND);
+        }
+        try {
+            Cliente cliente = converter(dto);
+            cliente.setId(id);
+            clienteService.salvar(cliente);
+            return ResponseEntity.ok(cliente);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity excluir(@PathVariable("id") Long id) {
+        Optional<Cliente> conserto = clienteService.getClienteById(id);
+        if (!conserto.isPresent()) {
+            return new ResponseEntity("Cliente não encontrado", HttpStatus.NOT_FOUND);
+        }
+        try {
+            clienteService.excluir(conserto.get());
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (RegraNegocioException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+}

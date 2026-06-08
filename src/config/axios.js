@@ -1,4 +1,12 @@
-export const BASE_URL = 'https://my-json-server.typicode.com/MRIVELLI/dbfake';
-export const BASE_URL2 = 'https://my-json-server.typicode.com/robertomalatestale/jsonfake2';
-//'https://my-json-server.typicode.com/marcoaparaujo/jsonfake';
-//https://my-json-server.typicode.com/L-ucasOliveira/jsonfake;
+const DEFAULT_BASE_URL = 'http://localhost:8081/api/v1';
+
+const resolveBaseUrl = (value) => {
+	if (typeof value === 'string' && value.trim() !== '') {
+		return value.replace(/\/$/, '');
+	}
+
+	return DEFAULT_BASE_URL;
+};
+
+export const BASE_URL = resolveBaseUrl(process.env.REACT_APP_BASE_URL);
+export const BASE_URL2 = resolveBaseUrl(process.env.REACT_APP_BASE_URL2);

@@ -20,13 +20,14 @@ import CadastroModelos from './views/cadastro-modelos';
 import CadastroConsertos from './views/cadastro-consertos';
 import CadastroProdutos from './views/cadastro-produtos';
 
-import { Route, Routes, BrowserRouter } from 'react-router-dom';
+import { Navigate, Route, Routes, BrowserRouter } from 'react-router-dom';
 
 
 function Rotas(props) {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path='/' element={<Navigate to='/listagem-clientes' replace />} />
         <Route path='/login' element={<Login />}
         />
         <Route path='/cadastro-modelos/:idParam?' element={<CadastroModelos />} />

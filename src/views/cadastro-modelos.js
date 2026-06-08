@@ -125,7 +125,7 @@ function CadastroAluno() {
                   </option>
                   {dadosMarcas.map((dado) => (
                     <option key={dado.id} value={dado.id}>
-                      {dado.nome}
+                      {dado.nomeMarca}
                     </option>
                   ))}
 

@@ -191,7 +191,7 @@ function CadastroConsertos() {
                       const modelo = dadosModelos.find(m => m.id === disp.idModelo);
                       const marca = dadosMarcas.find(m => m.id === disp.idMarca);
 
-                      const dispositivoFormatado = `[${marca?.nome}] ${modelo?.nomeModelo} - ${disp.ano}`;
+                      const dispositivoFormatado = `[${marca?.nomeMarca}] ${modelo?.nomeModelo} - ${disp.ano}`;
 
                       return (
                         <option key={disp.id} value={disp.id}>

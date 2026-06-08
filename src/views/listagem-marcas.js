@@ -83,7 +83,7 @@ function ListagemMarcas() {
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <td>{dado.nome}</td>
+                      <td>{dado.nomeMarca}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton

@@ -21,7 +21,7 @@ function CadastroMarcas() {
   const baseURL = `${BASE_URL2}/marcas`;
 
   const [id, setId] = useState('');
-  const [nome, setNome] = useState('');
+  const [nomeMarca, setNomeMarca] = useState('');
   
 
   const [dados, setDados] = React.useState([]);
@@ -29,16 +29,16 @@ function CadastroMarcas() {
   function inicializar() {
     if (idParam == null) {
       setId('');
-      setNome('');
+      setNomeMarca('');
       
     } else {
       setId(dados.id);
-      setNome(dados.nome);
+      setNomeMarca(dados.nomeMarca);
     }
   }
 
   async function salvar() {
-    let data = { id, nome};
+    let data = { id, nomeMarca };
     data = JSON.stringify(data);
     if (idParam == null) {
       await axios
@@ -46,7 +46,7 @@ function CadastroMarcas() {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
-          mensagemSucesso(`Marca ${nome} cadastrada com sucesso!`);
+          mensagemSucesso(`Marca ${nomeMarca} cadastrada com sucesso!`);
           navigate(`/listagem-marcas`);
         })
         .catch(function (error) {
@@ -58,7 +58,7 @@ function CadastroMarcas() {
           headers: { 'Content-Type': 'application/json' },
         })
         .then(function (response) {
-          mensagemSucesso(`Marca ${nome} alterada com sucesso!`);
+          mensagemSucesso(`Marca ${nomeMarca} alterada com sucesso!`);
           navigate(`/listagem-marcas`);
         })
         .catch(function (error) {
@@ -72,7 +72,7 @@ function CadastroMarcas() {
       setDados(response.data);
     });
     setId(dados.id);
-    setNome(dados.nome);
+    setNomeMarca(dados.nomeMarca);
   }
 
   const [dadosMarcas, setDadosMarcas] = React.useState(null);
@@ -102,10 +102,10 @@ function CadastroMarcas() {
                 <input
                   type='text'
                   id='inputNome'
-                  value={nome}
+                  value={nomeMarca}
                   className='form-control'
-                  name='nome'
-                  onChange={(e) => setNome(e.target.value)}
+                  name='nomeMarca'
+                  onChange={(e) => setNomeMarca(e.target.value)}
                 />
               </FormGroup>
               <Stack spacing={1} padding={1} direction='row'>
