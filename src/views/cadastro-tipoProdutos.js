@@ -26,15 +26,8 @@ function CadastroTipoProdutos() {
 
   const [dados, setDados] = React.useState([]);
 
-  function inicializar() {
-    if (idParam == null) {
-      setId('');
-      setNomeTipo('');
-      
-    } else {
-      setId(dados.id);
-      setNomeTipo(dados.nomeTipo);
-    }
+  function cancelar() {
+    navigate('/listagem-tipoProdutos');
   }
 
   async function salvar() {
@@ -117,7 +110,7 @@ function CadastroTipoProdutos() {
                   Salvar
                 </button>
                 <button
-                  onClick={inicializar}
+                  onClick={cancelar}
                   type='button'
                   className='btn btn-danger'
                 >

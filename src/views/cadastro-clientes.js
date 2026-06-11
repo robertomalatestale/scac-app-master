@@ -29,21 +29,8 @@ function CadastroClientes() {
   
   const [dados, setDados] = useState([]);
 
-  function inicializar() {
-    if (idParam == null) {
-      setId('');
-      setNomeCompleto('');
-      setCpf('');
-      setTelefoneCelular('');
-      setEmail('');
-      
-    } else {
-      setId(dados.id);
-      setNomeCompleto(dados.nomeCompleto);
-      setCpf(dados.cpf);
-      setTelefoneCelular(dados.telefoneCelular);
-      setEmail(dados.email);
-    }
+  function cancelar() {
+    navigate('/listagem-clientes');
   }
 
   async function salvar() {
@@ -150,7 +137,7 @@ function CadastroClientes() {
                   Salvar
                 </button>
                 <button
-                  onClick={inicializar}
+                  onClick={cancelar}
                   type='button'
                   className='btn btn-danger'
                 >

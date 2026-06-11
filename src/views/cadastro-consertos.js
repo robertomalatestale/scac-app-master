@@ -31,25 +31,11 @@ function CadastroConsertos() {
 
   const [dados, setDados] = React.useState([]);
 
-  function inicializar() {
-    if (idParam == null) {
-      setIdCliente();
-      setIdDispositivo();
-      setIdFuncionario();
-      setObservacoes();
-      setValor();
-      setDataEsperada();
 
-    } else {
-      setIdCliente(dados.idCliente);
-      setIdDispositivo(dados.idDispositivo);
-      setIdFuncionario(dados.idFuncionario);
-      setObservacoes(dados.observacoes);
-      setValor(dados.valor);
-      setDataEsperada(dados.dataEsperada);
-    }
+  function cancelar() {
+    navigate('/listagem-consertos');
   }
-
+  
   async function salvar() {
     let data = { id, idDispositivo, idFuncionario, observacoes, valor, dataEsperada };
     data = JSON.stringify(data);
@@ -260,7 +246,7 @@ function CadastroConsertos() {
                   Salvar
                 </button>
                 <button
-                  onClick={inicializar}
+                  onClick={cancelar}
                   type='button'
                   className='btn btn-danger'
                 >

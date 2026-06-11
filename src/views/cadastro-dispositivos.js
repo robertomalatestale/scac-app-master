@@ -29,19 +29,8 @@ function CadastroDispositivos() {
 
   const [dados, setDados] = useState([]);
 
-  function inicializar() {
-    if (idParam == null) {
-      setId('');
-      setIdMarca(0);
-      setIdModelo('');
-      setAno('');
-    } else {
-      setId(dados.id);
-      setIdMarca(dados.idMarca);
-      setIdModelo(dados.idModelo);
-      setAno(dados.ano);
-
-    }
+  function cancelar() {
+    navigate('/listagem-dispositivos');
   }
 
   async function salvar() {
@@ -167,7 +156,7 @@ function CadastroDispositivos() {
                   Salvar
                 </button>
                 <button
-                  onClick={inicializar}
+                  onClick={cancelar}
                   type='button'
                   className='btn btn-danger'
                 >

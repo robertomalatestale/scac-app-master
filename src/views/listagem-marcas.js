@@ -48,7 +48,8 @@ function ListagemMarcas() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir a Marca`);
+        const errorMessage = error.response?.data || 'Erro ao excluir a Marca';
+        mensagemErro(errorMessage);
       });
   }
 

@@ -48,7 +48,8 @@ function ListagemModelos() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir o modelo`);
+        const errorMessage = error.response?.data || 'Erro ao excluir o modelo';
+        mensagemErro(errorMessage);
       });
   }
 

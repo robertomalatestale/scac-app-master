@@ -48,7 +48,8 @@ function ListagemFuncionarios() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir o Funcionário`);
+        const errorMessage = error.response?.data || 'Erro ao excluir o Funcionário';
+        mensagemErro(errorMessage);
       });
   }
 

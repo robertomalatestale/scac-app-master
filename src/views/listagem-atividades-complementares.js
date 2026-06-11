@@ -48,7 +48,8 @@ function ListagemAtividadesComplementares() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir a atividade complementar`);
+        const errorMessage = error.response?.data || 'Erro ao excluir a atividade complementar';
+        mensagemErro(errorMessage);
       });
   }
 

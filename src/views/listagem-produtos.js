@@ -48,7 +48,8 @@ function ListagemProdutos() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir o produto`);
+        const errorMessage = error.response?.data || 'Erro ao excluir o produto';
+        mensagemErro(errorMessage);
       });
   }
 

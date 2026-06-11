@@ -30,16 +30,8 @@ function CadastroAluno() {
   
   const [dados, setDados] = React.useState([]);
 
-  function inicializar() {
-    if (idParam == null) {
-      setId('');
-      setIdMarca(0);
-      setNomeModelo('');
-    } else {
-      setId(dados.id);
-      setIdMarca(dados.idMarca);
-      setNomeModelo(dados.nomeModelo);
-    }
+  function cancelar() {
+    navigate('/listagem-modelos');
   }
 
   async function salvar() {
@@ -151,7 +143,7 @@ function CadastroAluno() {
                   Salvar
                 </button>
                 <button
-                  onClick={inicializar}
+                  onClick={cancelar}
                   type='button'
                   className='btn btn-danger'
                 >

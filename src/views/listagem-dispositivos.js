@@ -48,7 +48,8 @@ function ListagemDispositivos() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir o dispositivo`);
+        const errorMessage = error.response?.data || 'Erro ao excluir o dispositivo';
+        mensagemErro(errorMessage);
       });
   }
 

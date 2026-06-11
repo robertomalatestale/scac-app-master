@@ -26,15 +26,8 @@ function CadastroMarcas() {
 
   const [dados, setDados] = React.useState([]);
 
-  function inicializar() {
-    if (idParam == null) {
-      setId('');
-      setNomeMarca('');
-      
-    } else {
-      setId(dados.id);
-      setNomeMarca(dados.nomeMarca);
-    }
+  function cancelar() {
+    navigate('/listagem-marcas');
   }
 
   async function salvar() {
@@ -117,7 +110,7 @@ function CadastroMarcas() {
                   Salvar
                 </button>
                 <button
-                  onClick={inicializar}
+                  onClick={cancelar}
                   type='button'
                   className='btn btn-danger'
                 >

@@ -48,7 +48,8 @@ function ListagemTipoProdutos() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir o Tipo de Produto`);
+        const errorMessage = error.response?.data || 'Erro ao excluir o Tipo de Produto';
+        mensagemErro(errorMessage);
       });
   }
 

@@ -48,7 +48,8 @@ function ListagemConsertos() {
         );
       })
       .catch(function (error) {
-        mensagemErro(`Erro ao excluir o conserto`);
+        const errorMessage = error.response?.data || 'Erro ao excluir o conserto';
+        mensagemErro(errorMessage);
       });
   }
 

@@ -33,26 +33,8 @@ function CadastroProdutos() {
 
   const [dados, setDados] = React.useState([]);
 
-  function inicializar() {
-    if (idParam == null) {
-      setId('');
-      setNome('');
-      setPreco('');
-      setIdMarca('');
-      setIdTipoProduto('');
-      setCor('');
-      setQuantidade('');
-
-    } else {
-      setId(dados.id);
-      setNome(dados.nome);
-      setPreco(dados.preco);
-      setIdMarca(dados.idMarca);
-      setIdTipoProduto(dados.idTipoProduto);
-      setCor(dados.cor);
-      setQuantidade(dados.quantidade);
-
-    }
+  function cancelar() {
+    navigate('/listagem-produtos');
   }
 
   async function salvar() {
@@ -225,7 +207,7 @@ function CadastroProdutos() {
                   Salvar
                 </button>
                 <button
-                  onClick={inicializar}
+                  onClick={cancelar}
                   type='button'
                   className='btn btn-danger'
                 >
