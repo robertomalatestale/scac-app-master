@@ -21,6 +21,18 @@ const baseURL = `${BASE_URL2}/produtos`;
 function ListagemProdutos() {
   const navigate = useNavigate();
 
+  const formatarMoedaBRL = (valor) => {
+    if (valor == null || valor === '') return '';
+
+    const numero = Number(valor);
+    if (Number.isNaN(numero)) return valor;
+
+    return numero.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+  };
+
   const cadastrar = () => {
     navigate(`/cadastro-produtos`);
   };
@@ -30,6 +42,7 @@ function ListagemProdutos() {
   };
 
   const [dados, setDados] = React.useState(null);
+  const [dadosTipos, setDadosTipos] = React.useState(null);
 
   async function excluir(id) {
     let data = JSON.stringify({ id });
@@ -57,9 +70,19 @@ function ListagemProdutos() {
     axios.get(baseURL).then((response) => {
       setDados(response.data);
     });
+
+    axios.get(`${BASE_URL2}/tipoProdutos`).then((response) => {
+      setDadosTipos(response.data);
+    });
   }, []);
 
   if (!dados) return null;
+  if (!dadosTipos) return null;
+
+  const tipoProdutosPorId = dadosTipos.reduce((acc, tipo) => {
+    acc[tipo.id] = tipo.nomeTipo;
+    return acc;
+  }, {});
 
   return (
     <div className='container'>
@@ -69,7 +92,7 @@ function ListagemProdutos() {
             <div className='bs-component'>
               <button
                 type='button'
-                class='btn btn-warning'
+                className='btn btn-warning'
                 onClick={() => cadastrar()}
               >
                 Novo Produto
@@ -91,9 +114,9 @@ function ListagemProdutos() {
                   {dados.map((dado) => (
                     <tr key={dado.id}>
                       <td>{dado.nome}</td>
-                      <td>{dado.preco}</td>
+                      <td>{formatarMoedaBRL(dado.preco)}</td>
                       <td>{dado.marca?.nomeMarca || dado.idMarca}</td>
-                      <td>{dado.idTipoProduto}</td>
+                      <td>{tipoProdutosPorId[dado.idTipoProduto] || `Tipo #${dado.idTipoProduto}`}</td>
                       <td>{dado.cor}</td>
                       <td>{dado.quantidade}</td>
                       <td>

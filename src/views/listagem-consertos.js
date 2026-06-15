@@ -14,12 +14,25 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 import axios from 'axios';
+import { BASE_URL } from '../config/axios';
 import { BASE_URL2 } from '../config/axios';
 
 const baseURL = `${BASE_URL2}/consertos`;
 
 function ListagemConsertos() {
   const navigate = useNavigate();
+
+  const formatarMoedaBRL = (valor) => {
+    if (valor == null || valor === '') return '';
+
+    const numero = Number(valor);
+    if (Number.isNaN(numero)) return valor;
+
+    return numero.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+  };
 
   const cadastrar = () => {
     navigate(`/cadastro-consertos`);
@@ -30,6 +43,33 @@ function ListagemConsertos() {
   };
 
   const [dados, setDados] = React.useState(null);
+  const [dadosClientes, setDadosClientes] = React.useState(null);
+  const [dadosDispositivos, setDadosDispositivos] = React.useState(null);
+  const [dadosFuncionarios, setDadosFuncionarios] = React.useState(null);
+  const [dadosMarcas, setDadosMarcas] = React.useState(null);
+  const [dadosModelos, setDadosModelos] = React.useState(null);
+
+  const formatarDataBR = (valorData) => {
+    if (!valorData) return '';
+
+    const data = new Date(valorData);
+    if (Number.isNaN(data.getTime())) return valorData;
+
+    return data.toLocaleDateString('pt-BR');
+  };
+
+  const formatarDispositivo = (idDispositivo) => {
+    const dispositivo = dadosDispositivos.find((d) => d.id === idDispositivo);
+    if (!dispositivo) return `Dispositivo #${idDispositivo}`;
+
+    const marca = dadosMarcas.find((m) => m.id === dispositivo.idMarca);
+    const modelo = dadosModelos.find((m) => m.id === dispositivo.idModelo);
+
+    const marcaNome = marca?.nomeMarca || `Marca #${dispositivo.idMarca}`;
+    const modeloNome = modelo?.nomeModelo || `Modelo #${dispositivo.idModelo}`;
+
+    return `[${marcaNome}] ${modeloNome} - ${dispositivo.ano}`;
+  };
 
   async function excluir(id) {
     let data = JSON.stringify({ id });
@@ -57,9 +97,44 @@ function ListagemConsertos() {
     axios.get(baseURL).then((response) => {
       setDados(response.data);
     });
+
+    axios.get(`${BASE_URL}/clientes`).then((response) => {
+      setDadosClientes(response.data);
+    });
+
+    axios.get(`${BASE_URL}/dispositivos`).then((response) => {
+      setDadosDispositivos(response.data);
+    });
+
+    axios.get(`${BASE_URL}/funcionarios`).then((response) => {
+      setDadosFuncionarios(response.data);
+    });
+
+    axios.get(`${BASE_URL2}/marcas`).then((response) => {
+      setDadosMarcas(response.data);
+    });
+
+    axios.get(`${BASE_URL}/modelos`).then((response) => {
+      setDadosModelos(response.data);
+    });
   }, []);
 
   if (!dados) return null;
+  if (!dadosClientes) return null;
+  if (!dadosDispositivos) return null;
+  if (!dadosFuncionarios) return null;
+  if (!dadosMarcas) return null;
+  if (!dadosModelos) return null;
+
+  const clientesPorId = dadosClientes.reduce((acc, cliente) => {
+    acc[cliente.id] = cliente.nomeCompleto;
+    return acc;
+  }, {});
+
+  const funcionariosPorId = dadosFuncionarios.reduce((acc, funcionario) => {
+    acc[funcionario.id] = funcionario.nomeCompleto;
+    return acc;
+  }, {});
 
   return (
     <div className='container'>
@@ -89,12 +164,12 @@ function ListagemConsertos() {
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <td>{dado.idCliente}</td>
-                      <td>{dado.idDispositivo}</td>
-                      <td>{dado.idFuncionario}</td>
+                      <td>{clientesPorId[dado.idCliente] || `Cliente #${dado.idCliente}`}</td>
+                      <td>{formatarDispositivo(dado.idDispositivo)}</td>
+                      <td>{funcionariosPorId[dado.idFuncionario] || `Funcionário #${dado.idFuncionario}`}</td>
                       <td>{dado.observacoes}</td>
-                      <td>{dado.valor}</td>
-                      <td>{dado.dataEsperada}</td>
+                      <td>{formatarMoedaBRL(dado.valor)}</td>
+                      <td>{formatarDataBR(dado.dataEsperada)}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
                           <IconButton

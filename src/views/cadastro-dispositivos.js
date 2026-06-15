@@ -22,6 +22,7 @@ function CadastroDispositivos() {
   const baseURL = `${BASE_URL}/dispositivos`;
 
   const [id, setId] = useState('');
+  const [idCliente, setIdCliente] = useState('');
   const [idMarca, setIdMarca] = useState(0);
   const [idModelo, setIdModelo] = useState('');
   const [ano, setAno] = useState('');
@@ -34,7 +35,12 @@ function CadastroDispositivos() {
   }
 
   async function salvar() {
-    let data = { id, idMarca, idModelo, ano };
+    if (!idCliente || Number(idCliente) === 0) {
+      mensagemErro('Selecione um cliente.');
+      return;
+    }
+
+    let data = { id, idCliente: Number(idCliente), idMarca: Number(idMarca), idModelo: Number(idModelo), ano };
     data = JSON.stringify(data);
     if (idParam == null) {
       await axios
@@ -63,22 +69,35 @@ function CadastroDispositivos() {
     }
   }
 
+  const [dadosClientes, setDadosClientes] = React.useState(null);
   const [dadosMarcas, setDadosMarcas] = React.useState(null);
   const [dadosModelos, setDadosModelos] = React.useState(null);
 
   async function buscar() {
+    if (idParam == null) {
+      return;
+    }
+
     await axios.get(`${baseURL}/${idParam}`).then((response) => {
-      setDados(response.data);
+      const dado = response.data;
+      setDados(dado);
+      setId(dado.id);
+      setIdCliente(dado.idCliente);
+      setIdMarca(dado.idMarca);
+      setIdModelo(dado.idModelo);
+      setAno(dado.ano);
     });
-    setId(dados.id);
-    setIdMarca(dados.idMarca);
-    setIdModelo(dados.idModelo);
-    setAno(dados.ano);
   }
 
   useEffect(() => {
     buscar(); // eslint-disable-next-line
-  }, [id]);
+  }, [idParam]);
+
+  useEffect(() => {
+    axios.get(`${BASE_URL2}/clientes`).then((response) => {
+      setDadosClientes(response.data);
+    });
+  }, []);
 
   useEffect(() => {
     axios.get(`${BASE_URL2}/marcas`).then((response) => {
@@ -93,6 +112,7 @@ function CadastroDispositivos() {
   }, []);
 
   if (!dados) return null;
+  if (!dadosClientes) return null;
   if (!dadosMarcas) return null;
   if (!dadosModelos) return null;
 
@@ -102,9 +122,27 @@ function CadastroDispositivos() {
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>
+              <FormGroup label='Cliente: *' htmlFor='selectCliente'>
+                <select
+                  className='form-select'
+                  id='selectCliente'
+                  value={idCliente}
+                  name='idCliente'
+                  onChange={(e) => setIdCliente(e.target.value)}
+                >
+                  <option key='0' value='0'>
+                    {' '}
+                  </option>
+                  {dadosClientes.map((dado) => (
+                    <option key={dado.id} value={dado.id}>
+                      {dado.nomeCompleto}
+                    </option>
+                  ))}
+                </select>
+              </FormGroup>
               <FormGroup label='Marca: *' htmlFor='selectMarca'>
                 <select
-                  class='form-select'
+                  className='form-select'
                   id='selectMarca'
                   value={idMarca}
                   name='idMarca'

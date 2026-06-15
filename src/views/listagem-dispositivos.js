@@ -15,6 +15,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import axios from 'axios';
 import { BASE_URL } from '../config/axios';
+import { BASE_URL2 } from '../config/axios';
 
 const baseURL = `${BASE_URL}/dispositivos`;
 
@@ -30,6 +31,9 @@ function ListagemDispositivos() {
   };
 
   const [dados, setDados] = React.useState(null);
+  const [dadosClientes, setDadosClientes] = React.useState(null);
+  const [dadosMarcas, setDadosMarcas] = React.useState(null);
+  const [dadosModelos, setDadosModelos] = React.useState(null);
 
   async function excluir(id) {
     let data = JSON.stringify({ id });
@@ -57,9 +61,39 @@ function ListagemDispositivos() {
     axios.get(baseURL).then((response) => {
       setDados(response.data);
     });
+
+    axios.get(`${BASE_URL}/clientes`).then((response) => {
+      setDadosClientes(response.data);
+    });
+
+    axios.get(`${BASE_URL2}/marcas`).then((response) => {
+      setDadosMarcas(response.data);
+    });
+
+    axios.get(`${BASE_URL}/modelos`).then((response) => {
+      setDadosModelos(response.data);
+    });
   }, []);
 
   if (!dados) return null;
+  if (!dadosClientes) return null;
+  if (!dadosMarcas) return null;
+  if (!dadosModelos) return null;
+
+  const clientesPorId = dadosClientes.reduce((acc, cliente) => {
+    acc[cliente.id] = cliente.nomeCompleto;
+    return acc;
+  }, {});
+
+  const marcasPorId = dadosMarcas.reduce((acc, marca) => {
+    acc[marca.id] = marca.nomeMarca;
+    return acc;
+  }, {});
+
+  const modelosPorId = dadosModelos.reduce((acc, modelo) => {
+    acc[modelo.id] = modelo.nomeModelo;
+    return acc;
+  }, {});
 
   return (
     <div className='container'>
@@ -77,6 +111,7 @@ function ListagemDispositivos() {
               <table className='table table-hover'>
                 <thead>
                   <tr>
+                    <th scope='col'>Cliente</th>
                     <th scope='col'>Marca</th>
                     <th scope='col'>Modelo</th>
                     <th scope='col'>Ano</th>
@@ -86,8 +121,9 @@ function ListagemDispositivos() {
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <td>{dado.idMarca}</td>
-                      <td>{dado.idModelo}</td>
+                      <td>{clientesPorId[dado.idCliente] || `Cliente #${dado.idCliente}`}</td>
+                      <td>{marcasPorId[dado.idMarca] || `Marca #${dado.idMarca}`}</td>
+                      <td>{modelosPorId[dado.idModelo] || `Modelo #${dado.idModelo}`}</td>
                       <td>{dado.ano}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>

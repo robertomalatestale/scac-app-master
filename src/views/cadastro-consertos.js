@@ -134,7 +134,7 @@ function CadastroConsertos() {
             <div className='bs-component'>
               <FormGroup label='Cliente: *' htmlFor='selectCliente'>
                 <select
-                  class='form-select'
+                  className='form-select'
                   id='selectCliente'
                   value={idCliente}
                   name='idCliente'
@@ -152,7 +152,7 @@ function CadastroConsertos() {
               </FormGroup>
               <FormGroup label='Dispositivo: *' htmlFor='selectDispositivo'>
                   <select
-                  class='form-select'
+                  className='form-select'
                   id='selectDispositivo'
                   value={idDispositivo}
                   name='idDispositivo'
@@ -161,21 +161,15 @@ function CadastroConsertos() {
                   <option key='0' value='0'>
                     {' '}
                   </option>
-                 {idCliente !== 0 &&
+                 {Number(idCliente) > 0 &&
                   (() => {
-                    const clienteSelecionado = dadosClientes.find(c => c.id === idCliente);
-
-                    const idsDispositivosDoCliente = clienteSelecionado
-                      ? Object.values(clienteSelecionado.dispositivos[0])
-                      : [];
-
-                    const dispositivosFiltrados = dadosDispositivos.filter(d =>
-                      idsDispositivosDoCliente.includes(d.id)
+                    const dispositivosFiltrados = dadosDispositivos.filter(
+                      (d) => Number(d.idCliente) === Number(idCliente)
                     );
 
                     return dispositivosFiltrados.map((disp) => {
-                      const modelo = dadosModelos.find(m => m.id === disp.idModelo);
-                      const marca = dadosMarcas.find(m => m.id === disp.idMarca);
+                      const modelo = dadosModelos.find((m) => m.id === disp.idModelo);
+                      const marca = dadosMarcas.find((m) => m.id === disp.idMarca);
 
                       const dispositivoFormatado = `[${marca?.nomeMarca}] ${modelo?.nomeModelo} - ${disp.ano}`;
 
@@ -191,7 +185,7 @@ function CadastroConsertos() {
               </FormGroup>
               <FormGroup label='Funcionario: *' htmlFor='selectFuncionario'>
                   <select
-                  class='form-select'
+                  className='form-select'
                   id='selectFuncionario'
                   value={idFuncionario}
                   name='idFuncionario'

@@ -69,7 +69,7 @@ function ListagemTipoProdutos() {
             <div className='bs-component'>
               <button
                 type='button'
-                class='btn btn-warning'
+                className='btn btn-warning'
                 onClick={() => cadastrar()}
               >
                 Novo Tipo de Produto
@@ -77,7 +77,6 @@ function ListagemTipoProdutos() {
               <table className='table table-hover'>
                 <thead>
                   <tr>
-                    <th scope='col'>Id Produto</th>
                     <th scope='col'>Nome</th>
                     <th scope='col'>Ações</th>
                   </tr>
@@ -85,7 +84,6 @@ function ListagemTipoProdutos() {
                 <tbody>
                   {dados.map((dado) => (
                     <tr key={dado.id}>
-                      <td>{dado.id}</td>
                       <td>{dado.nomeTipo}</td>
                       <td>
                         <Stack spacing={1} padding={0} direction='row'>
