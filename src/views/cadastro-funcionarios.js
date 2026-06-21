@@ -15,9 +15,7 @@ import { BASE_URL } from '../config/axios';
 
 function CadastroFuncionarios() {
   const { idParam } = useParams();
-
   const navigate = useNavigate();
-
   const baseURL = `${BASE_URL}/funcionarios`;
 
   const [id, setId] = useState('');
@@ -26,63 +24,79 @@ function CadastroFuncionarios() {
   const [telefoneCelular, setTelefoneCelular] = useState('');
   const [email, setEmail] = useState('');
   
-
   const [dados, setDados] = useState([]);
+
+  // Função para pegar o token do localStorage
+  const obterConfiguracaoDeCabecalho = () => {
+    const usuarioSalvo = localStorage.getItem('usuario_autenticado');
+    if (!usuarioSalvo) return { headers: { 'Content-Type': 'application/json' } };
+    
+    const usuario = JSON.parse(usuarioSalvo);
+    return {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${usuario.token}` // Aqui é onde a mágica do acesso acontece!
+      }
+    };
+  };
 
   function cancelar() {
     navigate('/listagem-funcionarios');
   }
 
   async function salvar() {
-    let data = { id, nomeCompleto, cpf,telefoneCelular,email};
+    let data = { id, nomeCompleto, cpf, telefoneCelular, email };
     data = JSON.stringify(data);
+    
+    const config = obterConfiguracaoDeCabecalho();
+
     if (idParam == null) {
       await axios
-        .post(baseURL, data, {
-          headers: { 'Content-Type': 'application/json' },
-        })
+        .post(baseURL, data, config)
         .then(function (response) {
-          mensagemSucesso(`Funcionários ${nomeCompleto} cadastrado com sucesso!`);
+          mensagemSucesso(`Funcionário ${nomeCompleto} cadastrado com sucesso!`);
           navigate(`/listagem-funcionarios`);
         })
         .catch(function (error) {
-          mensagemErro(error.response.data);
+          mensagemErro(error.response?.data || 'Erro de permissão ou validação');
         });
     } else {
       await axios
-        .put(`${baseURL}/${idParam}`, data, {
-          headers: { 'Content-Type': 'application/json' },
-        })
+        .put(`${baseURL}/${idParam}`, data, config)
         .then(function (response) {
-          mensagemSucesso(`Funcionários ${nomeCompleto} alterado com sucesso!`);
+          mensagemSucesso(`Funcionário ${nomeCompleto} alterado com sucesso!`);
           navigate(`/listagem-funcionarios`);
         })
         .catch(function (error) {
-          mensagemErro(error.response.data);
+          mensagemErro(error.response?.data || 'Erro de permissão ou validação');
         });
     }
   }
 
   async function buscar() {
-    await axios.get(`${baseURL}/${idParam}`).then((response) => {
+    // Também precisa do token caso a rota GET passe a exigir no futuro
+    await axios.get(`${baseURL}/${idParam}`, obterConfiguracaoDeCabecalho()).then((response) => {
       setDados(response.data);
+      setId(response.data.id);
+      setNomeCompleto(response.data.nomeCompleto);
+      setCpf(response.data.cpf);
+      setTelefoneCelular(response.data.telefoneCelular);
+      setEmail(response.data.email);
+    }).catch(error => {
+        mensagemErro('Erro ao carregar os dados.');
     });
-    setId(dados.id);
-      setNomeCompleto(dados.nomeCompleto);
-      setCpf(dados.cpf);
-      setTelefoneCelular(dados.telefoneCelular);
-      setEmail(dados.email);
   }
 
   useEffect(() => {
-    buscar(); // eslint-disable-next-line
-  }, [id]);
-
-  if (!dados) return null;
+    if(idParam) {
+       buscar();
+    }
+    // eslint-disable-next-line
+  }, [idParam]);
 
   return (
     <div className='container'>
-      <Card title='Cadastro de Funcionários'>
+      <Card title={idParam ? 'Edição de Funcionários' : 'Cadastro de Funcionários'}>
         <div className='row'>
           <div className='col-lg-12'>
             <div className='bs-component'>

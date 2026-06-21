@@ -34,21 +34,6 @@ function ListagemConsertos() {
     });
   };
 
-  const cadastrar = () => {
-    navigate(`/cadastro-consertos`);
-  };
-
-  const editar = (id) => {
-    navigate(`/cadastro-consertos/${id}`);
-  };
-
-  const [dados, setDados] = React.useState(null);
-  const [dadosClientes, setDadosClientes] = React.useState(null);
-  const [dadosDispositivos, setDadosDispositivos] = React.useState(null);
-  const [dadosFuncionarios, setDadosFuncionarios] = React.useState(null);
-  const [dadosMarcas, setDadosMarcas] = React.useState(null);
-  const [dadosModelos, setDadosModelos] = React.useState(null);
-
   const formatarDataBR = (valorData) => {
     if (!valorData) return '';
 
@@ -58,7 +43,26 @@ function ListagemConsertos() {
     return data.toLocaleDateString('pt-BR');
   };
 
+  const cadastrar = () => {
+    navigate(`/cadastro-consertos`);
+  };
+
+  const editar = (id) => {
+    navigate(`/cadastro-consertos/${id}`);
+  };
+
+  const [dados, setDados] = React.useState(null);
+  const [dadosClientes, setDadosClientes] = React.useState([]);
+  const [dadosDispositivos, setDadosDispositivos] = React.useState([]);
+  const [dadosFuncionarios, setDadosFuncionarios] = React.useState([]);
+  const [dadosMarcas, setDadosMarcas] = React.useState([]);
+  const [dadosModelos, setDadosModelos] = React.useState([]);
+
   const formatarDispositivo = (idDispositivo) => {
+    if (!dadosDispositivos.length || !dadosMarcas.length || !dadosModelos.length) {
+      return `Dispositivo #${idDispositivo}`;
+    }
+
     const dispositivo = dadosDispositivos.find((d) => d.id === idDispositivo);
     if (!dispositivo) return `Dispositivo #${idDispositivo}`;
 
@@ -97,34 +101,24 @@ function ListagemConsertos() {
     axios.get(baseURL).then((response) => {
       setDados(response.data);
     });
-
     axios.get(`${BASE_URL}/clientes`).then((response) => {
       setDadosClientes(response.data);
     });
-
     axios.get(`${BASE_URL}/dispositivos`).then((response) => {
       setDadosDispositivos(response.data);
     });
-
     axios.get(`${BASE_URL}/funcionarios`).then((response) => {
       setDadosFuncionarios(response.data);
     });
-
     axios.get(`${BASE_URL2}/marcas`).then((response) => {
       setDadosMarcas(response.data);
     });
-
     axios.get(`${BASE_URL}/modelos`).then((response) => {
       setDadosModelos(response.data);
     });
   }, []);
 
   if (!dados) return null;
-  if (!dadosClientes) return null;
-  if (!dadosDispositivos) return null;
-  if (!dadosFuncionarios) return null;
-  if (!dadosMarcas) return null;
-  if (!dadosModelos) return null;
 
   const clientesPorId = dadosClientes.reduce((acc, cliente) => {
     acc[cliente.id] = cliente.nomeCompleto;
@@ -147,7 +141,7 @@ function ListagemConsertos() {
                 className='btn btn-warning'
                 onClick={() => cadastrar()}
               >
-                Novo conserto
+                Novo Conserto
               </button>
               <table className='table table-hover'>
                 <thead>
@@ -158,7 +152,7 @@ function ListagemConsertos() {
                     <th scope='col'>Observações</th>
                     <th scope='col'>Valor</th>
                     <th scope='col'>Data Esperada</th>
-                    <th scope='col'>Ações</th>
+                    <th scope='acoes'>Ações</th>
                   </tr>
                 </thead>
                 <tbody>

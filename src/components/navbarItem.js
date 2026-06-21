@@ -1,16 +1,17 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function NavbarItem({ render, ...props }) {
   if (render) {
     return (
       <li className='nav-item'>
-        <a onClick={props.onClick} className='nav-link' href={props.href}>
+        <Link onClick={props.onClick} className='nav-link' to={props.href}>
           {props.label}
-        </a>
+        </Link>
       </li>
     );
   } else {
-    return false;
+    return null;
   }
 }
 

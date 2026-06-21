@@ -1,6 +1,30 @@
 body {
   padding-top: 120px;
 }
+
+.navbar .navbar-auth-button {
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.14);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0.25rem 0.5rem 0.25rem 0;
+  min-width: 92px;
+  padding: 0.5rem 1rem;
+  text-transform: uppercase;
+}
+
+.navbar .navbar-auth-button:hover,
+.navbar .navbar-auth-button:focus {
+  color: #fff;
+  filter: brightness(1.08);
+}
+
+.navbar .navbar-auth-button:focus {
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.2), 0 0.4rem 1rem rgba(0, 0, 0, 0.14);
+}
+
 pre {
   background: #f7f7f9;
 }
@@ -244,4 +268,49 @@ pre {
     margin-bottom: 2em;
     text-align: center;
   }
+}
+
+/* ========================================================= */
+/* --- BOTÕES DE AUTENTICAÇÃO CHAMATIVOS (LOGIN E SAIR) ---  */
+/* ========================================================= */
+
+/* Botão de Entrar (Verde Neon) - Pega automaticamente pelo href="/login" */
+.navbar-nav a[href="/login"] {
+  background-color: #00e676 !important;
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  border-radius: 8px !important;
+  padding: 0.5rem 1.2rem !important;
+  margin-left: 10px;
+  box-shadow: 0 4px 10px rgba(0, 230, 118, 0.4) !important;
+  transition: all 0.3s ease !important;
+  text-transform: uppercase;
+}
+
+.navbar-nav a[href="/login"]:hover {
+  background-color: #00c853 !important;
+  box-shadow: 0 6px 15px rgba(0, 200, 83, 0.6) !important;
+  transform: translateY(-2px) !important;
+  color: #ffffff !important;
+}
+
+/* Botão de Sair (Vermelho Neon) */
+.btn-sair-chamativo {
+  background-color: #ff1744 !important;
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  border-radius: 8px !important;
+  padding: 0.5rem 1.2rem !important;
+  margin-left: 10px;
+  box-shadow: 0 4px 10px rgba(255, 23, 68, 0.4) !important;
+  transition: all 0.3s ease !important;
+  text-transform: uppercase;
+  text-decoration: none !important;
+}
+
+.btn-sair-chamativo:hover {
+  background-color: #d50000 !important;
+  box-shadow: 0 6px 15px rgba(213, 0, 0, 0.6) !important;
+  transform: translateY(-2px) !important;
+  color: #ffffff !important;
 }

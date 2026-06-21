@@ -31,16 +31,26 @@ function ListagemFuncionarios() {
 
   const [dados, setDados] = React.useState(null);
 
-  async function excluir(id) {
-    let data = JSON.stringify({ id });
+async function excluir(id) {
     let url = `${baseURL}/${id}`;
-    console.log(url);
+    
+    // 1. Resgata o usuário logado para pegar o token
+    const usuarioSalvo = localStorage.getItem('usuario_autenticado');
+    let cabecalho = { 'Content-Type': 'application/json' };
+
+    // 2. Se tiver um usuário, injeta o token de ADMIN na requisição
+    if (usuarioSalvo) {
+      const usuario = JSON.parse(usuarioSalvo);
+      cabecalho['Authorization'] = `Bearer ${usuario.token}`;
+    }
+
+    // 3. Usa a sintaxe correta do axios.delete (passando a URL e os Headers)
     await axios
-      .delete(url, data, {
-        headers: { 'Content-Type': 'application/json' },
-      })
+      .delete(url, { headers: cabecalho })
       .then(function (response) {
         mensagemSucesso(`Funcionário excluído com sucesso!`);
+        
+        // Atualiza a tabela removendo o funcionário excluído da tela
         setDados(
           dados.filter((dado) => {
             return dado.id !== id;
@@ -48,6 +58,7 @@ function ListagemFuncionarios() {
         );
       })
       .catch(function (error) {
+        // Agora, se der erro, ele vai te mostrar o motivo real
         const errorMessage = error.response?.data || 'Erro ao excluir o Funcionário';
         mensagemErro(errorMessage);
       });
